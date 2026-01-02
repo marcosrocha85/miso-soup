@@ -43,7 +43,7 @@ export default function Home() {
               className="border p-2"
               onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
             >
-              <option value="">Select</option>
+              <option value="" aria-label="Select an option">Select</option>
               {q.options.map((opt) => (
                 <option key={opt} value={opt}>{opt}</option>
               ))}
