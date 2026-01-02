@@ -29,7 +29,7 @@ export default function Home() {
       setRecommendations(response.data);
     } catch (error) {
       console.error(error);
-      setError('Failed to get recommendations. Please try again.');
+      setError('Failed to get recommendations. Please check your internet connection and make sure all questions are answered, then try again.');
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,7 @@ export default function Home() {
               onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
               required
             >
-              <option value="">Select</option>
+              <option value="" aria-label="Select an option">Select</option>
               {q.options.map((opt) => (
                 <option key={opt} value={opt}>{opt}</option>
               ))}
