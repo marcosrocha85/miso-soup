@@ -13,6 +13,7 @@ export default function Home() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [recommendations, setRecommendations] = useState<AnimeType[]>([]);
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const questions = [
     { id: 'mood', text: 'Current mood?', options: ['Energetic', 'Calm', 'Sad', 'Excited'] },
@@ -22,12 +23,15 @@ export default function Home() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/anime/recommend`, { answers: Object.values(answers) });
       setRecommendations(response.data);
     } catch (error) {
       console.error(error);
       setError('Failed to get recommendations. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,6 +46,7 @@ export default function Home() {
               id={q.id}
               className="border p-2"
               onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+              required
             >
               <option value="">Select</option>
               {q.options.map((opt) => (
@@ -50,7 +55,9 @@ export default function Home() {
             </select>
           </div>
         ))}
-        <button type="submit" className="bg-blue-500 text-white p-2">Get Recommendations</button>
+        <button type="submit" className="bg-blue-500 text-white p-2" disabled={loading}>
+          {loading ? 'Loading...' : 'Get Recommendations'}
+        </button>
       </form>
       {error && <p className="text-red-500 mt-4">{error}</p>}
       <div className="mt-8">
