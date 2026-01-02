@@ -27,7 +27,7 @@ export default function Home() {
       setRecommendations(response.data);
     } catch (error) {
       console.error(error);
-      setError('Failed to get recommendations. Please try again.');
+      setError('Failed to get recommendations. Please check your internet connection and make sure all questions are answered, then try again.');
     }
   };
 
