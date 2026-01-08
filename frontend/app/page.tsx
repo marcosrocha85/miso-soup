@@ -133,38 +133,42 @@ export default function Home() {
                 <header className="space-y-2">
                     <p className="text-sm font-semibold text-blue-600 dark:text-blue-300">Miso Soup</p>
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-50">Anime Recommender</h1>
-                    <p className="text-gray-600 dark:text-gray-300">Responda o teste MBTI e veja animes sugeridos para o seu perfil.</p>
+                    <p className="text-gray-600 dark:text-gray-300">Answer the MBTI test and get anime recommendations tailored to your personality profile.</p>
                 </header>
 
                 <form onSubmit={handleSubmit} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                     <div className="space-y-6">
                         {questions.map((q) => (
-                            <div key={q.id} className="space-y-3">
-                                <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{q.text}</p>
+                            <fieldset key={q.id} className="space-y-3">
+                                <legend className="text-sm font-medium text-gray-900 dark:text-gray-100">{q.text}</legend>
                                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                     {q.options.map((opt) => (
                                         <label
                                             key={opt.value}
-                                            className="relative flex cursor-pointer items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-blue-300 hover:bg-blue-50 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-blue-400 dark:hover:bg-gray-800 dark:has-[:checked]:border-blue-400 dark:has-[:checked]:bg-gray-800 dark:has-[:checked]:text-blue-300"
+                                            htmlFor={`${q.id}-${opt.value}`}
+                                            className="block cursor-pointer rounded-lg border border-gray-200 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-300 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:hover:border-gray-600 dark:has-[:checked]:border-blue-400 dark:has-[:checked]:ring-blue-400"
                                         >
-                                            <input
-                                                type="radio"
-                                                name={q.id}
-                                                value={opt.value}
-                                                className="sr-only"
-                                                onChange={(e) =>
-                                                    setAnswers({
-                                                        ...answers,
-                                                        [q.id]: e.target.value
-                                                    })
-                                                }
-                                                required
-                                            />
-                                            <span className="text-center">{opt.label}</span>
+                                            <div className="flex items-center gap-2">
+                                                <input
+                                                    type="radio"
+                                                    name={q.id}
+                                                    value={opt.value}
+                                                    id={`${q.id}-${opt.value}`}
+                                                    className="size-4 border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                                                    onChange={(e) =>
+                                                        setAnswers({
+                                                            ...answers,
+                                                            [q.id]: e.target.value
+                                                        })
+                                                    }
+                                                    required
+                                                />
+                                                <span className="text-gray-700 dark:text-gray-300">{opt.label}</span>
+                                            </div>
                                         </label>
                                     ))}
                                 </div>
-                            </div>
+                            </fieldset>
                         ))}
                     </div>
 
