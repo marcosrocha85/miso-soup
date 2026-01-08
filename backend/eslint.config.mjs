@@ -1,28 +1,23 @@
 // @ts-check
-import eslint from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import eslint from '@eslint/js';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default [
     {
-        ignores: [
-            "eslint.config.mjs",
-            ".next/**",
-            "out/**",
-            "build/**",
-            "next-env.d.ts",
-            "node_modules/**"
-        ]
+        ignores: ['eslint.config.mjs']
     },
     eslint.configs.recommended,
     ...tseslint.configs.recommendedTypeChecked,
+    eslintPluginPrettierRecommended,
     {
         languageOptions: {
             globals: {
-                ...globals.browser,
-                ...globals.es2021,
+                ...globals.node,
+                ...globals.jest
             },
-            sourceType: "module",
+            sourceType: 'commonjs',
             parserOptions: {
                 projectService: true,
                 tsconfigRootDir: import.meta.dirname
@@ -74,12 +69,6 @@ export default [
             "quotes": ["error", "double", { "allowTemplateLiterals": true }],
             "semi": 0,
             "valid-typeof": 1
-        }
-    },
-    {
-        files: ["**/*.ts", "**/*.tsx"],
-        rules: {
-            "@typescript-eslint/no-explicit-any": "off"
         }
     }
 ];

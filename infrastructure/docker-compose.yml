@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: miso_soup_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: miso_soup
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - miso_soup_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    build:
+      context: ..
+      dockerfile: infrastructure/Dockerfile.backend.dev
+    container_name: miso_soup_backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      DB_DATABASE: miso_soup
+      CRUNCHYROLL_TOKEN: ${CRUNCHYROLL_TOKEN:-your_token_here}
+      CRUNCHYROLL_LOCALE: ${CRUNCHYROLL_LOCALE:-en-US}
+      CRUNCHYROLL_AUDIO_LANGUAGE: ${CRUNCHYROLL_AUDIO_LANGUAGE:-ja-JP}
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    networks:
+      - miso_soup_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: infrastructure/Dockerfile.frontend.dev
+    container_name: miso_soup_frontend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - miso_soup_network
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  miso_soup_network:
+    driver: bridge
