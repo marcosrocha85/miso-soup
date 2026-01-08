@@ -14,6 +14,55 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - miso_soup_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    build:
+      context: ../backend/docker
+      dockerfile: Dockerfile.dev
+    container_name: miso_soup_backend
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      DB_DATABASE: miso_soup
+      CRUNCHYROLL_TOKEN: ${CRUNCHYROLL_TOKEN:-your_token_here}
+      CRUNCHYROLL_LOCALE: ${CRUNCHYROLL_LOCALE:-en-US}
+      CRUNCHYROLL_AUDIO_LANGUAGE: ${CRUNCHYROLL_AUDIO_LANGUAGE:-ja-JP}
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    networks:
+      - miso_soup_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ../frontend/docker
+      dockerfile: Dockerfile.dev
+    container_name: miso_soup_frontend
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3003
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - miso_soup_network
+    depends_on:
+      - backend
 
 volumes:
   mysql_data:
