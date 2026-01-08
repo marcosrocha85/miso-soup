@@ -4,9 +4,9 @@
   "private": false,
   "license": "MIT",
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 3002",
+    "dev": "next dev -H 0.0.0.0 -p 3001",
     "build": "next build",
-    "start": "next start -H 0.0.0.0 -p 3002",
+    "start": "next start -H 0.0.0.0 -p 3001",
     "lint": "eslint"
   },
   "dependencies": {
