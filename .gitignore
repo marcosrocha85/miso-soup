@@ -2,9 +2,10 @@
 /dist
 /node_modules
 /build
-/apps/*/dist
-/apps/*/node_modules
-/apps/*/coverage
+/backend/*/dist
+/backend/*/node_modules
+/backend/*/coverage
+/frontend/*/cache
 
 # project env
 .env.bot
