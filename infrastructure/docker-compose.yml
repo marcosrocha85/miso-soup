@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: miso_soup
     ports:
-      - "3318:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -21,12 +21,12 @@ services:
 
   backend:
     build:
-      context: ../backend/docker
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: infrastructure/Dockerfile.backend.dev
     container_name: miso_soup_backend
     restart: unless-stopped
     ports:
-      - "3003:3003"
+      - "3000:3000"
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
@@ -47,14 +47,14 @@ services:
 
   frontend:
     build:
-      context: ../frontend/docker
-      dockerfile: Dockerfile.dev
+      context: ..
+      dockerfile: infrastructure/Dockerfile.frontend.dev
     container_name: miso_soup_frontend
     restart: unless-stopped
     ports:
-      - "3002:3002"
+      - "3001:3001"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3003
+      NEXT_PUBLIC_API_URL: http://localhost:3000
     volumes:
       - ../frontend:/app
       - /app/node_modules
